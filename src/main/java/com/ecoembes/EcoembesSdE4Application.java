@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class EcoembesSdE4Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EcoembesSdE4Application.class, args);
+		SpringApplication.run(EcoembesSdE4Application.class, args); //prueba
 	}
 
 }

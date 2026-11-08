@@ -22,7 +22,7 @@ public class RecyclingPlant {
         capacities.put(date, tons);
     }
 
-    /** Capacity in tons for a date; 0 if the plant has not provided it. */
+    /** Capacity in tons for a date*/
     public float getCapacity(LocalDate date) {
         return capacities.getOrDefault(date, 0f);
     }

@@ -26,20 +26,29 @@ public class Dumpster {
     public int getCapacity() { return capacity; }
     public List<DumpsterReading> getReadings() { return readings; }
 
-    /** Adds a reading; if one already exists for that date it is replaced. */
     public void addReading(DumpsterReading reading) {
-        readings.removeIf(r -> r.getDate().equals(reading.getDate()));
+        for (int i = readings.size() - 1; i >= 0; i--) {
+            if (readings.get(i).getDate().equals(reading.getDate())) {
+                readings.remove(i);
+            }
+        }
         readings.add(reading);
         readings.sort(Comparator.comparing(DumpsterReading::getDate));
     }
 
-    /** Most recent reading, or null if the sensor has not sent any. */
     public DumpsterReading getLastReading() {
-        return readings.isEmpty() ? null : readings.get(readings.size() - 1);
+        if (readings.isEmpty()) {
+            return null;
+        }
+        return readings.get(readings.size() - 1);
     }
 
-    /** Reading of a given date, or null if there is none. */
     public DumpsterReading getReading(LocalDate date) {
-        return readings.stream().filter(r -> r.getDate().equals(date)).findFirst().orElse(null);
+        for (DumpsterReading r : readings) {
+            if (r.getDate().equals(date)) {
+                return r;
+            }
+        }
+        return null;
     }
 }

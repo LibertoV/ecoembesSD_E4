@@ -1,5 +1,8 @@
 package com.ecoembes.facade;
 
+import java.util.Optional;
+
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +37,11 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody CredentialsDTO credentials) {
-        return authService.login(credentials.email(), credentials.password())
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+    	Optional<String> token = authService.login(credentials.email(), credentials.password());
+        if (token.isPresent()) {
+            return ResponseEntity.ok(token.get());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @Operation(summary = "Logout", description = "Deletes the token; it can no longer be used")
@@ -46,8 +51,9 @@ public class AuthController {
     })
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestParam String token) {
-        return authService.logout(token)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    	if (authService.logout(token)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
